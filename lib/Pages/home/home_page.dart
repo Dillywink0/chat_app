@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:chat_app/Pages/settings/Friends.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/Pages/profile/profile.dart';
@@ -354,41 +355,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   groupList() {
-    return StreamBuilder(
-      stream: groups,
-      builder: (context, AsyncSnapshot snapshot) {
-        // make some checks
-        if (snapshot.hasData) {
-          if (snapshot.data['groups'] != null) {
-            if (snapshot.data['groups'].length != 0) {
-              // Filter groups based on search query
-              var filteredGroups = snapshot.data['groups'].where((group) {
-                String groupName = getName(group);
-                return groupName.toLowerCase().contains(_searchQuery);
-              }).toList();
-
-              return ListView.builder(
-                itemCount: filteredGroups.length,
-                itemBuilder: (context, index) {
-                  int reverseIndex = filteredGroups.length - index - 1;
-                  return GroupTile(
-                    groupId: getId(filteredGroups[reverseIndex]),
-                    groupName: getName(filteredGroups[reverseIndex]),
-                    userName: snapshot.data['fullName'],
-                  );
-                },
-              );
-            } else {
-              return noGroupWidget();
-            }
-          } else {
-            return noGroupWidget();
-          }
-        } else {
+    return FutureBuilder<List<DocumentSnapshot>>(
+      future: DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .getAllGroups(),
+      builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(
               color: Theme.of(context).primaryColor,
             ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text("Error: ${snapshot.error}"),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return noGroupWidget();
+        } else {
+          final groups = snapshot.data!;
+          List<DocumentSnapshot> filteredGroups = groups.where((group) {
+            String groupName = group.get('groupName');
+            return groupName.toLowerCase().contains(_searchQuery);
+          }).toList();
+
+          return ListView.builder(
+            itemCount: filteredGroups.length,
+            itemBuilder: (context, index) {
+              String groupId = filteredGroups[index].id;
+              String groupName = filteredGroups[index].get('groupName');
+              return GroupTile(
+                groupId: groupId,
+                groupName: groupName,
+                userName: userName,
+              );
+            },
           );
         }
       },

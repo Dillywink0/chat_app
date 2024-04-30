@@ -1,9 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:chat_app/FontSizeProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AccessibilitySettings extends StatefulWidget {
-  const AccessibilitySettings({Key? key}) : super(key: key);
+  const AccessibilitySettings({super.key});
 
   @override
   _AccessibilitySettingsState createState() => _AccessibilitySettingsState();
@@ -12,6 +14,7 @@ class AccessibilitySettings extends StatefulWidget {
 class _AccessibilitySettingsState extends State<AccessibilitySettings> {
   @override
   Widget build(BuildContext context) {
+    // Accessing font size from the FontSizeProvider
     double fontSize = Provider.of<FontSizeProvider>(context).fontSize;
 
     return Scaffold(
@@ -23,12 +26,15 @@ class _AccessibilitySettingsState extends State<AccessibilitySettings> {
           constraints: const BoxConstraints(maxWidth: 400),
           child: ListView(
             children: [
+              // Visual Settings Section
               _SectionHeader(title: "Visual Settings", fontSize: fontSize),
               _AccessibilitySettingTile(
                 title: "Increase Font Size",
                 icon: Icons.format_size,
                 onTap: () {
-                  Provider.of<FontSizeProvider>(context, listen: false).increaseFontSize();
+                  // Increasing font size when the tile is tapped
+                  Provider.of<FontSizeProvider>(context, listen: false)
+                      .increaseFontSize();
                 },
                 fontSize: fontSize,
               ),
@@ -39,6 +45,7 @@ class _AccessibilitySettingsState extends State<AccessibilitySettings> {
               ),
               // Add more visual settings here
 
+              // Hearing Settings Section
               _SectionHeader(title: "Hearing Settings", fontSize: fontSize),
               _AccessibilitySettingTile(
                 title: "Subtitles",
@@ -52,7 +59,9 @@ class _AccessibilitySettingsState extends State<AccessibilitySettings> {
               ),
               // Add more hearing settings here
 
-              _SectionHeader(title: "Motor Skills Settings", fontSize: fontSize),
+              // Motor Skills Settings Section
+              _SectionHeader(
+                  title: "Motor Skills Settings", fontSize: fontSize),
               _AccessibilitySettingTile(
                 title: "Touch Sensitivity",
                 icon: Icons.touch_app,
@@ -76,7 +85,7 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final double fontSize;
 
-  const _SectionHeader({Key? key, required this.title, required this.fontSize}) : super(key: key);
+  const _SectionHeader({required this.title, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +93,8 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18 + fontSize, fontWeight: FontWeight.bold), // Adjusting font size here
+        style: TextStyle(
+            fontSize: 18 + fontSize, fontWeight: FontWeight.bold), // Adjusting font size here
       ),
     );
   }
@@ -97,12 +107,12 @@ class _AccessibilitySettingTile extends StatelessWidget {
   final double fontSize;
 
   const _AccessibilitySettingTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     this.onTap,
     required this.fontSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

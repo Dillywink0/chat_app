@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AccountPage extends StatelessWidget {
+  const AccountPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +71,7 @@ class AccountPage extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection('users').doc().snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator(); // Placeholder while loading
+          return const CircularProgressIndicator(); // Placeholder while loading
         }
         var email = snapshot
             .data!['email']; // Assuming 'email' is the field name in Firestore
@@ -155,14 +159,10 @@ class AccountPage extends StatelessWidget {
   }
 
   void _handleChangeEmail(BuildContext context) {
-    // Implement your logic to change email here
-    // For now, let's just print a message
     print("Changing email...");
   }
 
   void _handleChangePassword(BuildContext context) {
-    // Implement your logic to change password here
-    // For now, let's just print a message
     print("Changing password...");
   }
 }

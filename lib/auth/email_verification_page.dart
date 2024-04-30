@@ -7,6 +7,7 @@ import '../auth/firebase_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// EmailVerificationScreen widget for email verification
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({Key? key}) : super(key: key);
 
@@ -18,41 +19,54 @@ class EmailVerificationScreen extends StatefulWidget {
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   bool isEmailVerified = false;
   Timer? timer;
+
   @override
   void initState() {
-    // TODO: implement initState
+    // Initializing state
     super.initState();
+    // Sending email verification to current user
     FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    // Starting a timer to check email verification status periodically
     timer =
         Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
   }
-void checkEmailVerified() async {
-  await FirebaseAuth.instance.currentUser?.reload();
 
-  setState(() {
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-  });
+  // Method to check if email is verified
+  void checkEmailVerified() async {
+    // Reloading current user to get latest email verification status
+    await FirebaseAuth.instance.currentUser?.reload();
 
-  if (isEmailVerified) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Email Successfully Verified")),
-    );
+    setState(() {
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    });
 
-    timer?.cancel();
+    if (isEmailVerified) {
+      // Showing snackbar if email is successfully verified
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email Successfully Verified")),
+      );
 
-    // Navigate to the next screen
-     HomePage();
+      // Canceling timer
+      timer?.cancel();
+
+      // Navigate to the next screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) =>  HomePage()),
+      );
+    }
   }
-}
+
   @override
   void dispose() {
-    // TODO: implement dispose
+    // Disposing timer
     timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Building UI
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -72,7 +86,7 @@ void checkEmailVerified() async {
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Center(
                   child: Text(
-                    'We have sent you a Email on  ${auth.currentUser?.email}',
+                    'We have sent you an email on ${auth.currentUser?.email}',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -81,8 +95,7 @@ void checkEmailVerified() async {
               const Center(child: CircularProgressIndicator()),
               const SizedBox(height: 8),
               const Padding(
-                padding: EdgeInsets
-                    .symmetric(horizontal: 32.0),
+                padding: EdgeInsets.symmetric(horizontal: 32.0),
                 child: Center(
                   child: Text(
                     'Verifying email....',
@@ -92,11 +105,11 @@ void checkEmailVerified() async {
               ),
               const SizedBox(height: 57),
               Padding(
-                padding: const EdgeInsets
-                    .symmetric(horizontal: 32.0),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: ElevatedButton(
                   child: const Text('Resend'),
                   onPressed: () {
+                    // Resending email verification
                     try {
                       FirebaseAuth.instance.currentUser
                           ?.sendEmailVerification();

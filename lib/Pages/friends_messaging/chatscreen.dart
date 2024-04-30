@@ -14,7 +14,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   List<Map<String, dynamic>> messages = [];
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   void initState() {
@@ -24,12 +24,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void loadMessages() async {
     try {
+      // Load messages from Firestore
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('messages')
           .where('receiverId', isEqualTo: widget.friendId)
           .orderBy('timestamp', descending: false)
           .get();
 
+      // Convert documents to a list of message maps
       List<Map<String, dynamic>> msgs = querySnapshot.docs
           .map((doc) => {
                 'id': doc.id,
@@ -39,6 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
               })
           .toList();
 
+      // Update messages state
       setState(() {
         messages = msgs;
       });
@@ -48,6 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String getMessageTime(DateTime messageTime) {
+    // Function to format message time
     DateTime now = DateTime.now();
 
     if (now.difference(messageTime).inHours < 24) {
@@ -60,6 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void deleteMessage(String messageId) async {
+    // Function to delete a message
     try {
       await FirebaseFirestore.instance.collection('messages').doc(messageId).delete();
 
@@ -71,6 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessage(String text) async {
+    // Function to send a message
     try {
       await FirebaseFirestore.instance.collection('messages').add({
         'senderId': FirebaseAuth.instance.currentUser!.uid,
@@ -79,6 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
+      // Reload messages
       loadMessages();
       _messageController.clear();
     } catch (e) {
@@ -179,7 +186,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-
+// Main function to run the app
 void main() {
   runApp(MaterialApp(
     home: FriendsPage(),

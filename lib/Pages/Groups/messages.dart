@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Model class for chat message
 class ChatMessage {
   final String sender;
   final String text;
@@ -12,6 +13,7 @@ class ChatMessage {
   });
 }
 
+// Model class for pinned message
 class PinnedMessage {
   final ChatMessage message;
   bool isPinned;
@@ -20,19 +22,24 @@ class PinnedMessage {
 }
 
 class GroupChat extends StatefulWidget {
+  const GroupChat({super.key});
+
   @override
   _GroupChatState createState() => _GroupChatState();
 }
 
 class _GroupChatState extends State<GroupChat> {
+  // List of chat messages
   List<ChatMessage> messages = [
     ChatMessage(sender: 'User1', text: 'Hello!', isMuted: false),
     ChatMessage(sender: 'User2', text: 'Hi there!', isMuted: false),
     ChatMessage(sender: 'User1', text: 'How are you?', isMuted: false),
   ];
 
+  // List of pinned messages
   List<PinnedMessage> pinnedMessages = [];
 
+  // Widget to build each chat message
   Widget buildMessage(ChatMessage message) {
     return ListTile(
       title: Text(message.sender),
@@ -41,7 +48,7 @@ class _GroupChatState extends State<GroupChat> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: Icon(Icons.push_pin),
+            icon: const Icon(Icons.push_pin),
             onPressed: () {
               setState(() {
                 pinnedMessages.add(PinnedMessage(message: message, isPinned: true));
@@ -62,12 +69,13 @@ class _GroupChatState extends State<GroupChat> {
     );
   }
 
+  // Widget to build each pinned message
   Widget buildPinnedMessage(PinnedMessage pinnedMessage) {
     return ListTile(
       title: Text(pinnedMessage.message.sender),
       subtitle: Text(pinnedMessage.message.text),
       trailing: IconButton(
-        icon: Icon(Icons.push_pin),
+        icon: const Icon(Icons.push_pin),
         onPressed: () {
           setState(() {
             pinnedMessage.isPinned = false;
@@ -82,7 +90,7 @@ class _GroupChatState extends State<GroupChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group Chat'),
+        title: const Text('Group Chat'),
       ),
       body: Column(
         children: [
@@ -111,7 +119,7 @@ class _GroupChatState extends State<GroupChat> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: GroupChat(),
   ));
 }

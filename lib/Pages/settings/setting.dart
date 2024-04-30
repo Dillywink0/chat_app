@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'Friends.dart'; // Import the FriendsPage screen
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();

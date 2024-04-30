@@ -1,22 +1,46 @@
-
 import 'package:flutter/material.dart';
 
-const kSendButtonTextStyle = TextStyle(
-  color: Colors.lightBlueAccent,
-  fontWeight: FontWeight.bold,
-  fontSize: 18.0,
-);
+// MyButton widget for custom button
+class MyButton extends StatelessWidget {
+  final String text;
+  final void Function()? onTap;
 
-const kMessageTextFieldDecoration = InputDecoration(
-  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  hintText: 'Type your message here...',
-  hintStyle: TextStyle(fontFamily: 'Poppins',fontSize: 14),
-  border: InputBorder.none,
-);
+  // Constructor
+  const MyButton({
+    Key? key, // Added Key parameter
+    required this.text,
+    required this.onTap,
+  }) : super(key: key); // Added super call to pass the key to the superclass constructor
 
-const kMessageContainerDecoration = BoxDecoration(
-  // border: Border(
-  //   top: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-  // ),
-  
-);
+  // Build method to create the UI
+  @override
+  Widget build(BuildContext context) {
+    // Returning GestureDetector widget for handling taps
+    return GestureDetector(
+      onTap: onTap, // Calling onTap function when tapped
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(212, 135, 81, 77),
+          borderRadius: BorderRadius.circular(40),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(color: Colors.amber),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const Icon(
+              Icons.arrow_forward,
+              color: Colors.amber,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app/Pages/home/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w400),
                       ),
-                      // Image.asset("lib/assets/Logo.png"),
                       TextFormField(
                         decoration: textInputDecoration.copyWith(
                             labelText: "Email",
@@ -69,8 +70,6 @@ class _LoginPageState extends State<LoginPage> {
                             email = val;
                           });
                         },
-
-                        // check the validation
                         validator: (val) {
                           return RegExp(
                                       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -160,51 +159,47 @@ class _LoginPageState extends State<LoginPage> {
                                 }),
                         ],
                       )),
-                     const SizedBox(
-  height: 10,
-),
-Text.rich(
-  TextSpan(
-  //  text: "Don't have an account? ",
-    style: const TextStyle(color: Colors.black, fontSize: 14),
-    children: <TextSpan>[
-      TextSpan(
- //       text: "Register here",
-        style: const TextStyle(
-          color: Colors.black,
-          decoration: TextDecoration.underline,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            nextScreen(context, const RegisterPage());
-          },
-      ),
-      const TextSpan(text: " | "),
-     TextSpan(
-  text: "Forgot password?",
-  style: const TextStyle(
-    color: Colors.black,
-    decoration: TextDecoration.underline,
-  ),
-  recognizer: TapGestureRecognizer()
-    ..onTap = () {
-      // Handle forgot password action using Firebase
-      FirebaseAuth.instance.sendPasswordResetEmail(email: email)
-        .then((_) {
-          // Password reset email sent successfully
-          // Navigate to a page informing the user that the reset link has been sent
-          // You can also show a snackbar or dialog here
-        })
-        .catchError((error) {
-          // Handle any errors that occur during the password reset process
-          // You can show an error message to the user
-        });
-    },
-),
-    ],
-  ),
-),
-
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          style: const TextStyle(color: Colors.black, fontSize: 14),
+                          children: <TextSpan>[
+                            TextSpan(
+                              style: const TextStyle(
+                                color: Colors.black,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  nextScreen(context, const RegisterPage());
+                                },
+                            ),
+                            const TextSpan(text: " | "),
+                            TextSpan(
+                              text: "Forgot password?",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  FirebaseAuth.instance.sendPasswordResetEmail(email: email)
+                                    .then((_) {
+                                      // Password reset email sent successfully
+                                      // Navigate to a page informing the user that the reset link has been sent
+                                      // You can also show a snackbar or dialog here
+                                    })
+                                    .catchError((error) {
+                                      // Handle any errors that occur during the password reset process
+                                      // You can show an error message to the user
+                                    });
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -229,7 +224,6 @@ Text.rich(
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
-          // ignore: use_build_context_synchronously
           nextScreenReplace(context, HomePage());
         } else {
           showSnackbar(context, Colors.red, value);

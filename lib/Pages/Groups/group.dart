@@ -4,22 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../auth/database_service.dart';
 import '../home/home.dart';
 
-class GroupInfo extends StatefulWidget {
-  final String groupId;
-  final String groupName;
-  final String adminName;
-
-  const GroupInfo({
-    Key? key,
-    required this.adminName,
-    required this.groupName,
-    required this.groupId,
-  }) : super(key: key);
-
-  @override
-  State<GroupInfo> createState() => _GroupInfoState();
-}
-
+// Model class for chat message
 class ChatMessage {
   final String id; // Unique ID for each message
   final String sender;
@@ -35,11 +20,13 @@ class ChatMessage {
     this.isMuted = false, // Initialize isMuted to false by default
   }) : this.readStatus = readStatus ?? {};
 
+  // Method to mark message as read
   void markAsRead(String userId) {
     readStatus[userId] = true;
   }
 }
 
+// Model class for pinned message
 class PinnedMessage {
   final ChatMessage message;
   final bool isPinned;
@@ -48,6 +35,22 @@ class PinnedMessage {
     required this.message,
     required this.isPinned,
   });
+}
+
+class GroupInfo extends StatefulWidget {
+  final String groupId;
+  final String groupName;
+  final String adminName;
+
+  const GroupInfo({
+    super.key,
+    required this.adminName,
+    required this.groupName,
+    required this.groupId,
+  });
+
+  @override
+  State<GroupInfo> createState() => _GroupInfoState();
 }
 
 class _GroupInfoState extends State<GroupInfo> {
@@ -63,18 +66,18 @@ class _GroupInfoState extends State<GroupInfo> {
     loadMockMessages(); // You can replace this with actual message loading logic
   }
 
+  // Mock method to load messages
   void loadMockMessages() {
     setState(() {
       messages = [
         ChatMessage(id: '1', sender: 'User1', text: 'Hello!', readStatus: {}),
-        ChatMessage(
-            id: '2', sender: 'User2', text: 'Hi there!', readStatus: {}),
-        ChatMessage(
-            id: '3', sender: 'User1', text: 'How are you?', readStatus: {}),
+        ChatMessage(id: '2', sender: 'User2', text: 'Hi there!', readStatus: {}),
+        ChatMessage(id: '3', sender: 'User1', text: 'How are you?', readStatus: {}),
       ];
     });
   }
 
+  // Method to get members of the group
   getMembers() async {
     try {
       DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
@@ -89,15 +92,18 @@ class _GroupInfoState extends State<GroupInfo> {
     }
   }
 
+  // Method to extract name from the user ID
   String getName(String r) {
     return r.substring(r.indexOf("_") + 1);
   }
 
+  // Method to extract ID from the user ID
   String getId(String res) {
     int underscoreIndex = res.indexOf("_");
     return underscoreIndex != -1 ? res.substring(0, underscoreIndex) : res;
   }
 
+  // Method to send friend request
   void sendFriendRequest(String receiverId, String receiverName) async {
     try {
       // Check if a friend request already exists
@@ -133,101 +139,102 @@ class _GroupInfoState extends State<GroupInfo> {
     }
   }
 
+  // Method to build each message as a ListTile widget
   Widget buildMessage(ChatMessage message) {
-  bool isMessageRead =
-      message.readStatus[FirebaseAuth.instance.currentUser!.uid] ?? false;
+    bool isMessageRead =
+        message.readStatus[FirebaseAuth.instance.currentUser!.uid] ?? false;
 
-  return ListTile(
-    title: Text(message.sender),
-    subtitle: Text(message.text),
-    trailing: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (isMessageRead)
-          Icon(
-            Icons.done_all,
-            color: Colors.blue, // Change color based on your design
+    return ListTile(
+      title: Text(message.sender),
+      subtitle: Text(message.text),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isMessageRead)
+            Icon(
+              Icons.done_all,
+              color: Colors.blue, // Change color based on your design
+            ),
+          IconButton(
+            icon: Icon(message.isMuted ? Icons.volume_off : Icons.volume_up),
+            onPressed: () {
+              setState(() {
+                message.isMuted = !message.isMuted;
+              });
+              // Implement your logic to update the mute status in the database
+            },
           ),
-        IconButton(
-          icon: Icon(message.isMuted ? Icons.volume_off : Icons.volume_up),
-          onPressed: () {
-            setState(() {
-              message.isMuted = !message.isMuted;
-            });
-            // Implement your logic to update the mute status in the database
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.person_add),
-          onPressed: () {
-            // Trigger the function to send a friend request
-            sendFriendRequest(getId(message.text), message.sender);
-          },
-        ),
-      ],
-    ),
-    onTap: () {
-      // Mark message as read when tapped
-      markMessageAsRead(message);
-    },
-  );
-}
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              // Trigger the function to send a friend request
+              sendFriendRequest(getId(message.text), message.sender);
+            },
+          ),
+        ],
+      ),
+      onTap: () {
+        // Mark message as read when tapped
+        markMessageAsRead(message);
+      },
+    );
+  }
 
-Widget memberList() {
-  return StreamBuilder(
-    stream: members,
-    builder: (context, AsyncSnapshot snapshot) {
-      if (snapshot.hasData) {
-        if (snapshot.data['members'] != null) {
-          if (snapshot.data['members'].length != 0) {
-            return ListView.builder(
-              itemCount: snapshot.data['members'].length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                String memberName = getName(snapshot.data['members'][index]);
-                String memberId = getId(snapshot.data['members'][index]);
+  // Widget to display the list of members
+  Widget memberList() {
+    return StreamBuilder(
+      stream: members,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data['members'] != null) {
+            if (snapshot.data['members'].length != 0) {
+              return ListView.builder(
+                itemCount: snapshot.data['members'].length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  String memberName = getName(snapshot.data['members'][index]);
+                  String memberId = getId(snapshot.data['members'][index]);
 
-                return buildMessage(
-                  ChatMessage(
-                      id: memberId, sender: memberName, text: memberId),
-                );
-              },
-            );
+                  return buildMessage(
+                    ChatMessage(
+                        id: memberId, sender: memberName, text: memberId),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text("NO MEMBERS"),
+              );
+            }
           } else {
             return const Center(
               child: Text("NO MEMBERS"),
             );
           }
         } else {
-          return const Center(
-            child: Text("NO MEMBERS"),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
           );
         }
-      } else {
-        return Center(
-          child: CircularProgressIndicator(
-            color: Theme.of(context).primaryColor,
-          ),
-        );
-      }
-    },
-  );
-}
+      },
+    );
+  }
 
-void markMessageAsRead(ChatMessage message) {
-  message.markAsRead(FirebaseAuth.instance.currentUser!.uid);
+  // Method to mark message as read
+  void markMessageAsRead(ChatMessage message) {
+    message.markAsRead(FirebaseAuth.instance.currentUser!.uid);
 
-  FirebaseFirestore.instance
-      .collection('group_messages')
-      .doc(widget.groupId)
-      .collection('messages')
-      .doc(message.id) // Assuming each message has a unique ID
-      .update({
-    'readStatus.${FirebaseAuth.instance.currentUser!.uid}': true,
-  });
-}
-
-
+    FirebaseFirestore.instance
+        .collection('group_messages')
+        .doc(widget.groupId)
+        .collection('messages')
+        .doc(message.id) // Assuming each message has a unique ID
+        .update({
+      'readStatus.${FirebaseAuth.instance.currentUser!.uid}': true,
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,8 +252,7 @@ void markMessageAsRead(ChatMessage message) {
                 builder: (context) {
                   return AlertDialog(
                     title: const Text("Exit"),
-                    content:
-                        const Text("Are you sure you want to exit the group?"),
+                    content: const Text("Are you sure you want to exit the group?"),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -357,9 +363,11 @@ void markMessageAsRead(ChatMessage message) {
       ),
     );
   }
-  
+
+  // Method to show dialog for renaming the group
   void showRenameGroupDialog(BuildContext context) {}
-  
+
+  // Method to change the group admin
   void changeGroupAdmin() {
     // Placeholder function for changing the group admin
     print("Changing group admin");
