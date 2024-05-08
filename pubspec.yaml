@@ -50,7 +50,7 @@ dependencies:
   logger: ^2.0.2+1
   jiffy: ^6.2.1
   image_picker: ^1.0.6
-  firebase_storage: ^11.6.0
+  firebase_storage: ^11.7.5
   flex_color_picker: ^3.3.0
   firebase_messaging: ^14.7.19
   intl: ^0.18.1
