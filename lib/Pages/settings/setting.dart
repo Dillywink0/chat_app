@@ -19,21 +19,21 @@ class _SettingsPageState extends State<SettingsPage> {
   void _navigateToAppearanceSettings(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AppearanceSettings()),
+      MaterialPageRoute(builder: (context) => const AppearanceSettings()),
     );
   }
 
   void _navigateToAccessibilitySettings(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AccessibilitySettings()),
+      MaterialPageRoute(builder: (context) => const AccessibilitySettings()), // naviagates to Accessibility page
     );
   }
 
   void _navigateToFriendsPage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => FriendsPage()),
+      MaterialPageRoute(builder: (context) => const FriendsPage()), // naviagates to friends page
     );
   }
 
@@ -59,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 // Close the dialog
                 Navigator.pop(context);
               },
-              child: const Text("Sign Out"),
+              child: const Text("Sign Out"), // text for the sign out button
             ),
           ],
         );
@@ -112,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const Divider(),
               _SingleSection(
-                title: "User Account",
+                title: "User Account",// title text for the user account header in the page
                 children: [
                   ListTile(
                     title: const Text("Account"),
@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AccountPage()),
+                        MaterialPageRoute(builder: (context) => const AccountPage()),
                       );
                     },
                   ),
@@ -143,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ConnectionsPage()),
+                            builder: (context) => const ConnectionsPage()),
                       );
                     },
                     fontSize: fontSize,

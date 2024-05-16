@@ -4,6 +4,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:provider/provider.dart';
 
 class AppearanceSettings extends StatefulWidget {
+  const AppearanceSettings({super.key});
+
   @override
   _AppearanceSettingsState createState() => _AppearanceSettingsState();
 }
@@ -15,7 +17,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Appearance Settings"),
+        title: const Text("Appearance Settings"),// This appears as the title on the page
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -32,9 +34,9 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
                 width: 150.0,
                 height: 150.0,
                 borderRadius: 5.0,
-                heading: Text('Pick a color'),
-                subheading: Text('Select a color'),
-                pickersEnabled: {
+                heading: const Text('Pick a color'), // Appears as text on the page
+                subheading: const Text('Select a color'),
+                pickersEnabled: const {
                   ColorPickerType.both: false,
                   ColorPickerType.primary: true,
                   ColorPickerType.accent: false,
@@ -47,7 +49,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
 
               // Display the selected color
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0), // The size of the edges on the boxes
                 child: Text(
                   'Selected Color: ${selectedColor.toString()}',
                   style: TextStyle(color: selectedColor),
@@ -60,7 +62,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
                   // No need to save here, as color is updated in onColorChanged
                   Navigator.pop(context); // Close the AppearanceSettings screen
                 },
-                child: Text("Save"),
+                child: const Text("Save"),
               ),
             ],
           ),

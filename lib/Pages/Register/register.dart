@@ -14,17 +14,17 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _isLoading = false;
-  final formKey = GlobalKey<FormState>();
-  String email = "";
-  String password = "";
-  String fullName = "";
-  AuthService authService = AuthService();
+  bool _isLoading = false; // Flag to indicate whether registration is in progress
+  final formKey = GlobalKey<FormState>(); // Key for the form validation
+  String email = ""; // Stores user input for email
+  String password = ""; // Stores user input for password
+  String fullName = ""; // Stores user input for full name
+  AuthService authService = AuthService(); // Instance of the authentication service
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading
+      body: _isLoading // Show loading indicator if registration is in progress
           ? Center(
               child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor))
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                           onPressed: () {
-                            register();
+                            register(); // Call the register function when the button is pressed
                           },
                         ),
                       ),
@@ -163,22 +163,24 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  // Function to handle user registration
   register() async {
     if (formKey.currentState!.validate()) {
       setState(() {
-        _isLoading = true;
+        _isLoading = true; // Set loading indicator to true
       });
       await authService
           .registerUserWithEmailandPassword(fullName, email, password)
           .then((value) async {
         if (value == true) {
-          // saving the shared preference state
+          // Save user login status and details to shared preferences
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(fullName);
-          // ignore: use_build_context_synchronously
+          // Navigate to the home page
           nextScreenReplace(context, HomePage());
         } else {
+          // Show error message and set loading indicator to false
           showSnackbar(context, Colors.red, value);
           setState(() {
             _isLoading = false;

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 // New page for managing connections
 class ConnectionsPage extends StatelessWidget {
+  const ConnectionsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,18 +38,16 @@ class ConnectionsPage extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Add Connection"),
+              title: const Text("Add Connection"), // Appears as text on the page
               content: Column(
                 children: [
                   TextField(
                     controller: _searchController,
                     decoration: const InputDecoration(
-                      labelText: 'Search for an app',
-                    ),
+                      labelText: 'Search for an app', // Appears as text on the page
+                    ), 
                   ),
-                  // Add your search result list here
-                  // You can use a ListView.builder to display search results
-                  // based on the entered text in _searchController
+                
                 ],
               ),
               actions: [
@@ -59,10 +59,6 @@ class ConnectionsPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Add logic to handle adding a new connection
-                    // Implement your connection logic here
-
-                    // Close the dialog
                     Navigator.pop(context);
                   },
                   child: const Text("Add"),

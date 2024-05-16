@@ -1,9 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/Pages/friends_messaging/chatscreen.dart';
 
 class FriendsPage extends StatefulWidget {
+  const FriendsPage({super.key});
+
   @override
   _FriendsPageState createState() => _FriendsPageState();
 }
@@ -192,7 +196,7 @@ class _FriendsPageState extends State<FriendsPage> {
         // Handle the case where the friend request document is not found.
       }
     } catch (e) {
-      print('Error declining friend request: $e');
+      print('Error declining friend request: $e'); // printing out if there is the error in the terminal
     }
   }
 
@@ -210,7 +214,7 @@ class _FriendsPageState extends State<FriendsPage> {
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: acceptedFriends.length,
                 itemBuilder: (context, index) {
                   String friendId = acceptedFriends[index];
@@ -229,7 +233,7 @@ class _FriendsPageState extends State<FriendsPage> {
                           child: ListTile(
                             title: Text(
                               friendFullName,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             trailing: IconButton(
                               icon: const Icon(Icons.message),
@@ -270,7 +274,7 @@ class _FriendsPageState extends State<FriendsPage> {
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: friendRequests.length,
                 itemBuilder: (context, index) {
                   String requestId = friendRequests[index];
@@ -289,7 +293,7 @@ class _FriendsPageState extends State<FriendsPage> {
                           child: ListTile(
                             title: Text(
                               requesterFullName,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             subtitle: const Text('Friend Request'),
                             trailing: Row(

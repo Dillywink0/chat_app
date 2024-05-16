@@ -5,7 +5,6 @@ class DevicesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Implement your logic to display the list of devices here
     return Scaffold(
       appBar: AppBar(
         title: const Text('Logged-in Devices'),

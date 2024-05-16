@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -55,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: CircleAvatar(
                     radius: 60,
                     backgroundImage: NetworkImage(
-                      _userData['profilePicture'] ??
+                      _userData['profilePicture'] ?? // Deals with getting the profile's picture
                           'https://example.com/path/to/default/image.jpg',
                     ),
                   ),
@@ -63,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                _userData['fullName'] ?? 'N/A',
+                _userData['fullName'] ?? 'N/A', // Deals with getting the fullname from database
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -71,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                _userData['email'] ?? 'N/A',
+                _userData['email'] ?? 'N/A',// Deals with getting the email  from database
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.grey,
@@ -85,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
-                child: const Text(
+                child: const Text( // Displays add status button
                   "Add Status",
                   style: TextStyle(
                     color: Colors.white,
@@ -101,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundColor: Colors.blue,
                 ),
                 child: const Text(
-                  "Edit Profile",
+                  "Edit Profile", // Displays add Edit Profile button
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -122,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   "Password", _buildPasswordSection(context)),
               const SizedBox(height: 16.0),
               _buildAccountSection(
-                  "Profile Picture", _buildProfilePictureSection(context)),
+                  "Profile Picture", _buildProfilePictureSection(context)), // Button for profile picture
             ],
           ),
         ),
@@ -282,23 +286,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Change Email'),
+          title: const Text('Change Email'), // Text to display change email
           content: TextField(
             controller: emailController,
-            decoration: InputDecoration(labelText: 'New Email'),
+            decoration: const InputDecoration(labelText: 'New Email'),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(emailController.text);
               },
-              child: Text('Update'),
+              child: const Text('Update'),
             ),
           ],
         );
@@ -329,23 +333,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Change Name'),
+          title: const Text('Change Name'),
           content: TextField(
             controller: nameController,
-            decoration: InputDecoration(labelText: 'New Name'),
+            decoration: const InputDecoration(labelText: 'New Name'),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(nameController.text);
               },
-              child: Text('Update'),
+              child: const Text('Update'),
             ),
           ],
         );
@@ -397,10 +401,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Change Password'),
+          title: const Text('Change Password'),
           content: TextField(
             controller: passwordController,
-            decoration: InputDecoration(labelText: 'New Password'),
+            decoration: const InputDecoration(labelText: 'New Password'),
             obscureText: true,
           ),
           actions: <Widget>[
@@ -408,13 +412,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(passwordController.text);
               },
-              child: Text('Update'),
+              child: const Text('Update'),
             ),
           ],
         );
@@ -493,7 +497,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ProfileScreen(),
   ));
 }
