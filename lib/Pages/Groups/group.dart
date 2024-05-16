@@ -9,6 +9,7 @@ class ChatMessage {
   final String id; // Unique ID for each message
   final String sender;
   final String text;
+  final DateTime timestamp; // Timestamp of the message
   Map<String, bool> readStatus; // Map to track read status of each member
   bool isMuted; // Define isMuted property
 
@@ -16,6 +17,7 @@ class ChatMessage {
     required this.id,
     required this.sender,
     required this.text,
+    required this.timestamp,
     Map<String, bool>? readStatus,
     this.isMuted = false, // Initialize isMuted to false by default
   }) : this.readStatus = readStatus ?? {};
@@ -43,11 +45,11 @@ class GroupInfo extends StatefulWidget {
   final String adminName;
 
   const GroupInfo({
-    super.key,
+    Key? key,
     required this.adminName,
     required this.groupName,
     required this.groupId,
-  });
+  }) : super(key: key);
 
   @override
   State<GroupInfo> createState() => _GroupInfoState();
@@ -70,9 +72,9 @@ class _GroupInfoState extends State<GroupInfo> {
   void loadMockMessages() {
     setState(() {
       messages = [
-        ChatMessage(id: '1', sender: 'User1', text: 'Hello!', readStatus: {}),
-        ChatMessage(id: '2', sender: 'User2', text: 'Hi there!', readStatus: {}),
-        ChatMessage(id: '3', sender: 'User1', text: 'How are you?', readStatus: {}),
+        ChatMessage(id: '1', sender: 'User1', text: 'Hello!', timestamp: DateTime.now(), readStatus: {}),
+        ChatMessage(id: '2', sender: 'User2', text: 'Hi there!', timestamp: DateTime.now(), readStatus: {}),
+        ChatMessage(id: '3', sender: 'User1', text: 'How are you?', timestamp: DateTime.now(), readStatus: {}),
       ];
     });
   }
@@ -146,12 +148,21 @@ class _GroupInfoState extends State<GroupInfo> {
 
     return ListTile(
       title: Text(message.sender),
-      subtitle: Text(message.text),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(message.text),
+          Text(
+            '${message.timestamp.hour}:${message.timestamp.minute}', // Displaying time
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+        ],
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (isMessageRead)
-            Icon(
+            const Icon(
               Icons.done_all,
               color: Colors.blue, // Change color based on your design
             ),
@@ -165,7 +176,7 @@ class _GroupInfoState extends State<GroupInfo> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.person_add),
+            icon: const Icon(Icons.person_add),
             onPressed: () {
               // Trigger the function to send a friend request
               sendFriendRequest(getId(message.text), message.sender);
@@ -197,7 +208,11 @@ class _GroupInfoState extends State<GroupInfo> {
 
                   return buildMessage(
                     ChatMessage(
-                        id: memberId, sender: memberName, text: memberId),
+                      id: memberId,
+                      sender: memberName,
+                      text: memberId,
+                      timestamp: DateTime.now(), // Replace with actual timestamp
+                    ),
                   );
                 },
               );
@@ -235,6 +250,7 @@ class _GroupInfoState extends State<GroupInfo> {
       'readStatus.${FirebaseAuth.instance.currentUser!.uid}': true,
     });
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
