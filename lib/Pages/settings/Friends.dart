@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -200,6 +198,41 @@ class _FriendsPageState extends State<FriendsPage> {
     }
   }
 
+  void blockFriend(String friendId) async {
+    try {
+      print('Blocking friend with ID: $friendId');
+
+      // Check if the friend is already blocked
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('blocked_users')
+          .where('blockerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('blockedUserId', isEqualTo: friendId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print('Friend is already blocked.');
+        return;
+      }
+
+      // Add the friend to the blocked_users collection
+      await FirebaseFirestore.instance.collection('blocked_users').add({
+        'blockerId': FirebaseAuth.instance.currentUser!.uid,
+        'blockedUserId': friendId,
+        'timestamp': DateTime.now(), // Optionally, you can add a timestamp
+      });
+
+      // Update the UI to reflect the block action
+      setState(() {
+        acceptedFriends.remove(friendId);
+        // You may also remove the friend from friendRequests if it exists there
+      });
+
+      print('Friend with ID $friendId blocked successfully.');
+    } catch (e) {
+      print('Error blocking friend: $e');
+    }
+  }
+
   Widget _buildAcceptedFriendsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,16 +268,27 @@ class _FriendsPageState extends State<FriendsPage> {
                               friendFullName,
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.message),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatScreen(friendId),
-                                  ),
-                                );
-                              },
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.block),
+                                  onPressed: () {
+                                    blockFriend(friendId);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.message),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreen(friendId),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         );
