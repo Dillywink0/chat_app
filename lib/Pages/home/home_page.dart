@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FriendsPage()));
+                    MaterialPageRoute(builder: (context) => const FriendsPage()));
               },
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

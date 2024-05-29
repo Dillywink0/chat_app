@@ -1,10 +1,12 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/Pages/friends_messaging/chatscreen.dart';
 
 class FriendsPage extends StatefulWidget {
-  const FriendsPage({super.key});
+  const FriendsPage({Key? key});
 
   @override
   _FriendsPageState createState() => _FriendsPageState();
@@ -194,26 +196,25 @@ class _FriendsPageState extends State<FriendsPage> {
         // Handle the case where the friend request document is not found.
       }
     } catch (e) {
-      print('Error declining friend request: $e'); // printing out if there is the error in the terminal
+      print('Error declining friend request: $e');
     }
   }
 
-  void blockFriend(String friendId) async {
-    try {
-      print('Blocking friend with ID: $friendId');
+void blockFriend(String friendId) async {
+  try {
+    print('Blocking friend with ID: $friendId');
 
-      // Check if the friend is already blocked
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('blocked_users')
-          .where('blockerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .where('blockedUserId', isEqualTo: friendId)
-          .get();
+    // Check if the friend is already blocked
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('blocked_users')
+        .where('blockerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('blockedUserId', isEqualTo: friendId)
+        .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        print('Friend is already blocked.');
-        return;
-      }
-
+    if (querySnapshot.docs.isNotEmpty) {
+      print('Friend is already blocked.');
+      return;
+    }
       // Add the friend to the blocked_users collection
       await FirebaseFirestore.instance.collection('blocked_users').add({
         'blockerId': FirebaseAuth.instance.currentUser!.uid,
@@ -221,10 +222,9 @@ class _FriendsPageState extends State<FriendsPage> {
         'timestamp': DateTime.now(), // Optionally, you can add a timestamp
       });
 
-      // Update the UI to reflect the block action
+      // Remove the friend from the acceptedFriends list
       setState(() {
         acceptedFriends.remove(friendId);
-        // You may also remove the friend from friendRequests if it exists there
       });
 
       print('Friend with ID $friendId blocked successfully.');
@@ -272,13 +272,13 @@ class _FriendsPageState extends State<FriendsPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.block),
+                                  icon: const Icon(Icons.block),
                                   onPressed: () {
                                     blockFriend(friendId);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.message),
+                                  icon: const Icon(Icons.message),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -398,3 +398,4 @@ class _FriendsPageState extends State<FriendsPage> {
     );
   }
 }
+
