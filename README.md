@@ -1,6 +1,8 @@
 # chat_app
 
-A new Flutter project.
+This is my Chatting App that was created for my Final Year Project.
+
+Conducted penetration testing, vulnerability assessments, and applied security principles like encryption and secure API handling to ensure the app met industry standards for mobile security.
 
 ## Getting Started
 
