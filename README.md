@@ -4,15 +4,12 @@ This is my Chatting App that was created for my Final Year Project.
 
 Conducted penetration testing, vulnerability assessments, and applied security principles like encryption and secure API handling to ensure the app met industry standards for mobile security.
 
-## Getting Started
+Features:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    Real-Time Messaging: Instant communication with real-time message delivery, making conversations fluid and responsive.
+    User Authentication: Secure user authentication ensures privacy and personalized messaging experiences.
+    Easy-to-Use Interface: A minimalist design focusing on ease of use, providing a clutter-free environment for users to chat.
+    Robust Back-End: Powered by [add technologies you used: e.g., Node.js, Express, etc.], the back-end ensures reliability, performance, and scalability.
+    Front-End Excellence: The front-end leverages [add front-end framework e.g., React, Vue.js] for a responsive, modern user experience.
+    Extensibility: The application is built with scalability in mind, making it easy to add more features such as group chats, multimedia sharing, or notifications.
+    
